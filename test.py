@@ -2,7 +2,8 @@ import os
 import openai
 from dotenv import load_dotenv
 from pathlib import Path
-load_dotenv()
+import re 
+load_dotenv(Path("key.env"))
 OPENAI_API_KEY = os.getenv("API_KEY")
 
 
@@ -191,6 +192,15 @@ prompt = """
 history = []
 completion = openai.chat
 
+def get_html_from_str(string : str):
+    pattern = r"<!DOCTYPE html>.*?</html>"
+    match = re.search(pattern, string, re.DOTALL)
+    modified_string = re.sub(pattern, "", string, flags=re.DOTALL)
+    html_document = match.group(0)
+    return (modified_string, html_document)
+    
+
+
 def document_type(prompt):
     completion = openai.chat.completions.create(
     model="gpt-4o-mini",
@@ -264,3 +274,7 @@ if __name__ == "__main__":
         user_input = input("You: ")
         correction = human_correction(user_input, response, document, history)
         print("GPT: ", correction)
+        text, html = get_html_from_str(correction)
+        print("HTML: ", html)
+        print("TEXT: ", text)
+        
