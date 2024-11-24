@@ -7,6 +7,7 @@ import { FaPaperclip, FaTrash } from "react-icons/fa"; // Import paperclip and t
 function Main() {
     const [field1, setField1] = useState("");
     const [field2, setField2] = useState("");
+    const [suggestion, setSuggestion] = useState(""); // New state for suggestion input
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState(null);
@@ -65,7 +66,6 @@ function Main() {
                 "http://127.0.0.1:5000/api/data",
                 formData
             );
-            // Do not set headers here, axios handles it for FormData
             console.log("Response:", response.data);
 
             setResult(response.data);
@@ -90,7 +90,7 @@ function Main() {
     };
 
     const handleFileChange1 = (e) => {
-        const selectedFile = e.target.files[0];
+        const selectedFile = e.target.files[0]; // This function remains unchanged
         if (selectedFile) {
             setFile1(selectedFile);
             setField1(selectedFile.name);
@@ -98,11 +98,22 @@ function Main() {
     };
 
     const handleFileChange2 = (e) => {
-        const selectedFile = e.target.files[0];
+        const selectedFile = e.target.files[0]; // This function remains unchanged
         if (selectedFile) {
             setFile2(selectedFile);
             setField2(selectedFile.name);
         }
+    };
+
+    const handleNewRequest = () => {
+        // Reset all relevant states
+        setField1('');
+        setField2('');
+        setSuggestion(''); // Reset suggestion input
+        setFile1(null);
+        setFile2(null);
+        setResult(null);
+        setError('');
     };
 
     const resetFileInput1 = () => {
@@ -114,6 +125,37 @@ function Main() {
         setFile2(null);
         setField2("");
     };
+
+    const handleSuggestionSubmit = async () => {
+        if (!suggestion) {
+            setError("Please provide a suggestion!");
+            return;
+        }
+
+        setLoading(true);
+        setError("");
+
+        const formData = new FormData();
+        formData.append("suggestion", suggestion); // Add suggestion to form data
+
+        try {
+            const response = await axios.post(
+                "http://127.0.0.1:5000/api/new",
+                formData
+            );
+            console.log("Suggestion Response:", response.data);
+            setSuggestion(""); // Reset suggestion input
+        } catch (error) {
+            console.error(
+                "Error:",
+                error.response ? error.response.data : error.message
+            );
+            setError("An error occurred while submitting the suggestion.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
     if (result) {
         return (
             <div className="container mt-5">
@@ -139,6 +181,37 @@ function Main() {
                     <h2>Conclusion</h2>
                     <p>{result.Conclusion}</p>
                 </div>
+                {/* Suggestion Field */}
+                <div className="form-group mb-4">
+                    <label htmlFor="suggestion">Suggestion:</label>
+                    <textarea
+                        id="suggestion"
+                        value={suggestion}
+                        onChange={(e) => {
+                            setSuggestion(e.target.value);
+                            adjustTextareaHeight(e);
+                        }}
+                        className="form-control rounded-input"
+                        rows="1"
+                        placeholder="Type your suggestion here..."
+                        style={{ resize: "none" }}
+                    />
+                </div>
+                {/* Submit Suggestion Button */}
+                <button
+                    className="btn btn-primary button-spacing"
+                    onClick={handleSuggestionSubmit}
+                    disabled={loading}
+                >
+                    {loading ? "Submitting..." : "Submit Suggestion"}
+                </button>
+                {/* New Request Button */}
+                <button
+                    className="btn btn-secondary button-spacing"
+                    onClick={handleNewRequest}
+                >
+                    New Request
+                </button>
             </div>
         );
     }
