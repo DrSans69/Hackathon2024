@@ -14,11 +14,7 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-
 openai.api_key = settings.api_key
-
-
-history = []
 completion = openai.chat
 
 
@@ -87,24 +83,3 @@ def human_correction(prompt, answer, text, history):
     history.append(prompt)
     history.append(completion.choices[0].message.content)
     return completion.choices[0].message.content
-
-
-# def answer():
-
-
-# if __name__ == "__main__":
-#     while True:
-#         user_input = input("You: ")
-#         document = prompt
-#         if user_input.lower() in ["quit", "exit", "bye"]:
-#             print("Goodbye!")
-#             break
-#         response = analyze(prompt, standart, history)
-#         # response = document_type(prompt)
-#         print("GPT: ", response)
-#         user_input = input("You: ")
-#         correction = human_correction(user_input, response, document, history)
-#         print("GPT: ", correction)
-#         text, html = get_html_from_str(correction)
-#         print("HTML: ", html)
-#         print("TEXT: ", text)
