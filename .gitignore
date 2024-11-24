@@ -1,7 +1,7 @@
 *.exe
 *.o
 
-temp/*
+*/temp/*
 
 *.db
 node_modules/
