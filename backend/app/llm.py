@@ -3,6 +3,7 @@ import openai
 from pathlib import Path
 import re
 from pydantic_settings import BaseSettings
+from flask import jsonify
 
 
 class Settings(BaseSettings):
@@ -124,3 +125,15 @@ def parse_check(prompt, standard, history):
     else:
         # Return parsed sections if everything matches
         return parsed_sections
+
+
+def inspect(prompt, standard):
+    history = []
+    sections = parse_check(prompt, standard)
+
+    structured_data = {}
+    for i in range(0, len(sections), 2):
+        if i + 1 < len(sections):  # Ensure there's a corresponding content
+            structured_data[sections[i]] = sections[i + 1]
+
+    return jsonify(structured_data)

@@ -16,11 +16,23 @@ def home():
 
 @app.route('/api/data', methods=['POST'])
 def get_data():
+    # Get text and standart from JSON
     input_text = request.json.get('text', '')
     standart = request.json.get('standart', '')
 
-    history = []
-    processed_text = llm.analyze(input_text, standart, history)
+    # Check if input_text is empty and try to get it from the uploaded file
+    if not input_text and 'file1' in request.files:
+        file = request.files['file1']
+        if file:
+            input_text = file.read().decode('utf-8')  # Assuming the file is a text file
+
+    # Check if standart is empty and try to get it from the uploaded file
+    if not standart and 'file2' in request.files:
+        file = request.files['file2']
+        if file:
+            standart = file.read().decode('utf-8')
+
+    processed_text = llm.analyze(input_text, standart)
 
     return jsonify({"message": processed_text})
 
