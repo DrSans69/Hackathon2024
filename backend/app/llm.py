@@ -132,15 +132,3 @@ def parse_check(prompt, standard, history, origin):
     else:
         # Return parsed sections if everything matches
         return parsed_sections
-
-
-def inspect(prompt, standard, origin):
-    history = []
-    sections = parse_check(prompt, standard, history, origin)
-
-    structured_data = {}
-    for i in range(0, len(sections), 2):
-        if i + 1 < len(sections):  # Ensure there's a corresponding content
-            structured_data[sections[i]] = sections[i + 1]
-
-    return structured_data

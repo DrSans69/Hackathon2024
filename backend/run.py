@@ -174,9 +174,45 @@ def get_data():
     with open(file_path, "w") as file:  # "w" mode overwrites the file; use "a" to append
         file.write(input_text)
 
-    processed_data = llm.inspect(input_text, standard, origin)
+    sections = llm.parse_check(input_text, standard, [], origin)
 
-    return jsonify(processed_data)
+    structured_data = {}
+    for i in range(0, len(sections), 2):
+        if i + 1 < len(sections):  # Ensure there's a corresponding content
+            structured_data[sections[i]] = sections[i + 1]
+
+    file_path = "temp/str.txt"
+    with open(file_path, "w") as file:  # "w" mode overwrites the file; use "a" to append
+        str = ''
+        for i in range(1, len(sections), 2):
+            str += sections[i]
+        file.write(str)
+
+    return jsonify(structured_data)
+
+
+@app.route('/api/new', methods=['POST'])
+def get_suggestion():
+    suggestion = request.form.get('suggestion', '')
+
+    file_path = "temp/output.html"
+    with open(file_path, "r") as file:  # "w" mode overwrites the file; use "a" to append
+        html = file.read()
+
+    file_path = "temp/str.txt"
+    with open(file_path, "r") as file:  # "w" mode overwrites the file; use "a" to append
+        answer = file.read()
+
+    text = llm.human_correction(suggestion, answer, html, [])
+    text, html = llm.get_html_from_str(text)
+
+    file_path = "temp/output.html"
+    with open(file_path, "w") as file:  # "w" mode overwrites the file; use "a" to append
+        file.write(html)
+
+    print(text)
+
+    return jsonify({'message': text})
 
 
 if __name__ == '__main__':

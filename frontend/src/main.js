@@ -107,13 +107,13 @@ function Main() {
 
     const handleNewRequest = () => {
         // Reset all relevant states
-        setField1('');
-        setField2('');
-        setSuggestion(''); // Reset suggestion input
+        setField1("");
+        setField2("");
+        setSuggestion(""); // Reset suggestion input
         setFile1(null);
         setFile2(null);
         setResult(null);
-        setError('');
+        setError("");
     };
 
     const resetFileInput1 = () => {
@@ -124,6 +124,11 @@ function Main() {
     const resetFileInput2 = () => {
         setFile2(null);
         setField2("");
+    };
+
+    const refreshIframe = () => {
+        const iframe = document.getElementById("myIframe");
+        iframe.src = iframe.src;
     };
 
     const handleSuggestionSubmit = async () => {
@@ -145,6 +150,7 @@ function Main() {
             );
             console.log("Suggestion Response:", response.data);
             setSuggestion(""); // Reset suggestion input
+            refreshIframe();
         } catch (error) {
             console.error(
                 "Error:",
@@ -160,9 +166,10 @@ function Main() {
         return (
             <div className="container mt-5">
                 <iframe
+                    id="myIframe"
                     src="http://127.0.0.1:5000/html"
                     width="100%"
-                    height="500px"
+                    height="900px"
                 ></iframe>
                 <h1>Content Overview</h1>
                 <div>
@@ -173,9 +180,12 @@ function Main() {
                     <h2>Overall score</h2>
                     <p>{result["Overall score"]}</p>
                 </div>
+
                 <div>
                     <h2>Recommendations for Autofill Suggestions</h2>
-                    <p>{result["Recommendations for Autofill Suggestions"]}</p>
+                    <pre>
+                        {result["Recommendations for Autofill Suggestions"]}
+                    </pre>
                 </div>
                 <div>
                     <h2>Conclusion</h2>
