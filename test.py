@@ -86,108 +86,7 @@ standart = """
 </html>
 """
 prompt = """
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tech Innovators Hub</title>
-    <style>
-        body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            background-color: #f0f0f0;
-            color: #333;
-            line-height: 1.8;
-            margin: 0;
-            padding: 0;
-        }
-        header {
-            background-color: #2d3e50;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            font-size: 2em;
-            letter-spacing: 1px;
-        }
-        nav {
-            background-color: #34495e;
-            text-align: center;
-            padding: 10px;
-        }
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 20px;
-            font-weight: bold;
-            font-size: 1.1em;
-        }
-        nav a:hover {
-            color: #1abc9c;
-        }
-        section {
-            padding: 40px 20px;
-            margin: 20px;
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-        h2 {
-            color: #2c3e50;
-            font-size: 1.8em;
-            margin-bottom: 15px;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            font-size: 1.2em;
-            margin-bottom: 15px;
-            color: #7f8c8d;
-        }
-        footer {
-            background-color: #2d3e50;
-            color: white;
-            text-align: center;
-            padding: 15px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-    </style>
-</head>
-<body>
-    <header>
-        <h1>Tech Innovators Hub</h1>
-        <p>Shaping the Future of Technology</p>
-    </header>
-    <nav>
-        <a href="#about">About</a>
-        <a href="#projects">Our Projects</a>
-        <a href="#contact">Get In Touch</a>
-    </nav>
-    <section id="about">
-        <h2>About Us</h2>
-        <p>At Tech Innovators Hub, we are dedicated to fostering groundbreaking technology solutions that will revolutionize industries. We bring together the best minds to collaborate on projects that push the limits of what's possible.</p>
-    </section>
-    <section id="projects">
-        <h2>Our Projects</h2>
-        <ul>
-            <li><strong>AI for Healthcare:</strong> Developing intelligent systems to assist medical professionals in diagnosing and treating diseases.</li>
-            <li><strong>Smart Cities:</strong> Implementing IoT technologies to build sustainable and efficient urban environments.</li>
-            <li><strong>Blockchain Solutions:</strong> Creating decentralized systems to enhance security and transparency in various industries.</li>
-        </ul>
-    </section>
-    <section id="contact">
-        <h2>Contact Us</h2>
-        <p>Email: <a href="mailto:info@techinnovatorshub.com">info@techinnovatorshub.com</a></p>
-        <p>Phone: +1 (555) 987-6543</p>
-    </section>
-    <footer>
-        <p>&copy; 2024 Tech Innovators Hub. All rights reserved.</p>
-    </footer>
-</body>
-</html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8" /><meta http-equiv="Content-Style-Type" content="text/css" /><title></title></head><body style="line-height:116%; font-family:Aptos; font-size:12pt"><div><div style="-aw-headerfooter-type:header-primary; clear:both"><p style="margin-top:0pt; margin-bottom:8pt"><span style="height:0pt; display:block; position:absolute; z-index:-65537"><img src="Output.001.png" width="624" height="340" alt="" style="margin-top:230.87pt; -aw-left-pos:0pt; -aw-rel-hpos:margin; -aw-rel-vpos:margin; -aw-top-pos:0pt; -aw-wrap-type:none; position:absolute" /></span><span style="-aw-import:ignore">&#xa0;</span></p></div><p style="margin-top:0pt; margin-bottom:8pt"><span>Test1</span></p><p style="margin-top:0pt; margin-bottom:8pt"><span style="font-family:'Amasis MT Pro Black'">Test2</span></p><p style="margin-top:0pt; margin-bottom:8pt"><span style="font-family:'Arial Black'; color:#45b0e1">Test3</span></p><p style="margin-top:0pt; margin-bottom:8pt"><span style="font-family:'Arial Black'; text-decoration:underline; color:#4c94d8">Test4</span></p><p style="margin-top:0pt; margin-bottom:8pt; text-align:right"><span style="font-family:'Arial Nova Cond'; font-weight:bold; text-decoration:underline">Multiple words line test </span></p></div></body></html>
 """
 history = []
 completion = openai.chat
@@ -223,15 +122,17 @@ def topics(prompt):
     )
     return completion.choices[0].message.content
 
-def analyze(prompt, standart, history : list):
+def analyze(prompt, standart, history : list, origin):
     completion = openai.chat.completions.create(
         model="gpt-4o",
         messages=[
-            {"role": "system", "content": f"""You are a helpful assistant who needs to analyze and validate documents given
-            documents against this standard: {standart} of user's organisation and general look of documents of such types. You 
+            {"role": "system", "content": f"""You are a helpful assistant who needs to analyze and validate given document which was a {origin} format, converted to html. 
+            In you should give recommendations assuming this is still a file of {origin} format. Compare the
+            document against this standard: {standart} of user's organisation and general look of documents of such types. You 
             need to recommend autofill suggestions for
             incomplete sections is they are present, and if there is some  historical data: {history}, base it on it. Give the user's document overall score out of 10.
-            Print your recommendations, suggest what other things the user may add based on the topic and type of the document. Account for formatting too. Fistly you type what the provided document is, then the overall score which should be just 
+            Print your recommendations, suggest what other things the user may add based on the topic and type of the document. Account for formatting too. Fistly you type what the provided document is, meaning it's orignal format {origin}. 
+            Do not specify that it has been converted. Then the overall score which should be just 
             some number out of 10, then 
             by points recommendations for Autofill Suggestions, small conclusion. Do not use hashtags before topic names"""},
             {"role" : "assistant", "content" :  """The provided document is a ... Overall score: 10/10. Recommendations for Autofill Suggestions: ... Conclusion: ..."""},
@@ -249,7 +150,8 @@ def human_correction(prompt, answer, text, history):
             {"role": "system", "content": f"""You have to modify the original document {text} 
              based on the points the user wants to modify. All the available 
              points are here: {answer}. Take into account 
-             history of prompts and answers: {history}. Print the whole modified document as an answer"""},
+             history of prompts and answers: {history}. Print the whole modified document as an answer. 
+             It always should start with <!DOCTYPE html>"""},
             # {"role" : "assistant", "content" :  """<"""},
             {"role": "user", "content": prompt}
         ]
@@ -259,8 +161,8 @@ def human_correction(prompt, answer, text, history):
     return completion.choices[0].message.content
 
 
-def parse_check(prompt, standard, history):
-    response = analyze(prompt, standard, history)
+def parse_check(prompt, standard, history, origin):
+    response = analyze(prompt, standard, history, origin)
 
     # Clean up and print each section
     sections = re.split(
@@ -295,7 +197,7 @@ def parse_check(prompt, standard, history):
         parsed_sections[6] != "Conclusion"
     ):
         # If not matching, recursively call the function again
-        return parse_check(prompt, standard, history)
+        return parse_check(prompt, standard, history, origin)
     else:
         # Return parsed sections if everything matches
         return parsed_sections
@@ -304,12 +206,13 @@ def parse_check(prompt, standard, history):
 
 if __name__ == "__main__":
     while True:
+        origin = "docx"
         user_input = input("You: ")
         document = prompt
         if user_input.lower() in ["quit", "exit", "bye"]:
             print("Goodbye!")
             break
-        response = parse_check(prompt, standart, history)
+        response = parse_check(prompt, standart, history, origin)
         # response = document_type(prompt)
         # print("GPT: ", response)
         for i in range(1, len(response), 2):

@@ -34,10 +34,11 @@ def docx_to_html(temp_path):
 
     # Output the cleaned HTML string
     os.remove("output.001.png")
-    os.remove("Output.html")
+    # os.remove("Output.html")
 
     return(html_string)
 
+print(docx_to_html("Test1.docx"))
 # Print the cleaned HTML
 # print(cleaned_html)
 # cleaned_html2 = re.sub(pattern2, "", cleaned_html)
