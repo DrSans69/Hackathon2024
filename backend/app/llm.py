@@ -52,12 +52,12 @@ def topics(prompt):
     return completion.choices[0].message.content
 
 
-def analyze(prompt, standart, history: list):
+def analyze(prompt, standard, history: list):
     completion = openai.chat.completions.create(
         model="gpt-4o",
         messages=[
             {"role": "system", "content": f"""You are a helpful assistant who needs to analyze and validate documents given
-            documents against this standard: {standart} of user's organisation and general look of documents of such types. You
+            documents against this standard: {standard} of user's organisation and general look of documents of such types. You
             need to recommend autofill suggestions for
             incomplete sections is they are present, and if there is some  historical data: {history}, base it on it. Give the user's document overall score out of 10.
             Print your recommendations, suggest what other things the user may add based on the topic and type of the document. Fistly you type what the provided document is, then the overall score which should be just
@@ -129,11 +129,11 @@ def parse_check(prompt, standard, history):
 
 def inspect(prompt, standard):
     history = []
-    sections = parse_check(prompt, standard)
+    sections = parse_check(prompt, standard, history)
 
     structured_data = {}
     for i in range(0, len(sections), 2):
         if i + 1 < len(sections):  # Ensure there's a corresponding content
             structured_data[sections[i]] = sections[i + 1]
 
-    return jsonify(structured_data)
+    return structured_data
