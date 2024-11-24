@@ -231,7 +231,7 @@ def analyze(prompt, standart, history : list):
             documents against this standard: {standart} of user's organisation and general look of documents of such types. You 
             need to recommend autofill suggestions for
             incomplete sections is they are present, and if there is some  historical data: {history}, base it on it. Give the user's document overall score out of 10.
-            Print your recommendations, suggest what other things the user may add based on the topic and type of the document. Fistly you type what the provided document is, then the overall score which should be just 
+            Print your recommendations, suggest what other things the user may add based on the topic and type of the document. Account for formatting too. Fistly you type what the provided document is, then the overall score which should be just 
             some number out of 10, then 
             by points recommendations for Autofill Suggestions, small conclusion. Do not use hashtags before topic names"""},
             {"role" : "assistant", "content" :  """The provided document is a ... Overall score: 10/10. Recommendations for Autofill Suggestions: ... Conclusion: ..."""},
